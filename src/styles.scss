@@ -1,0 +1,12 @@
+// Import Fuse core library
+@import "@fuse/scss/core";
+
+// Import app.theme.scss
+@import "app/app.theme";
+
+@import "styles/extends";
+@import "styles/mixins";
+
+mat-progress-bar.loaded {
+    opacity: 0;
+}

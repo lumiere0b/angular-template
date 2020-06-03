@@ -1,0 +1,21 @@
+<mat-dialog-content>
+    <p class="pre">
+        [{{ auditLog.id }}] <b>{{ auditLog.context }}</b><br>
+        <time>{{ auditLog.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</time> /
+        <span>{{ auditLog.request.ip }}</span>
+    </p>
+    <p *ngIf="auditLog.nickname || auditLog.username">
+        User: <span *ngIf="auditLog.nickname">{{ auditLog.nickname }}</span> <span *ngIf="auditLog.username">({{ auditLog.username }})</span>
+    </p>
+
+    <ng-container *ngIf="auditLog.error">
+        <p>Error: {{ auditLog.error.message }}</p>
+        <pre>{{ auditLog.error.stack }}</pre>
+    </ng-container>
+
+    <pre>{{ auditLog.request | json }}</pre>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button type="button" mat-button [mat-dialog-close]="false" color="primary">Close</button>
+</mat-dialog-actions>

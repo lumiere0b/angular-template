@@ -1,0 +1,19 @@
+@import "~@angular/material/theming";
+@import "src/styles/mixins";
+
+mat-dialog-content {
+    max-width: 85vw;
+}
+
+p {
+    @include text-ellipsis;
+}
+
+pre {
+    @include mat-elevation(2);
+
+    background-color: rgba(#000000, 0.1);
+    border-radius: 4px;
+    overflow-y: auto;
+    white-space: pre;
+}

@@ -1,0 +1,113 @@
+<div id="audit-logs" class="page-layout carded fullwidth inner-scroll app-list-theme">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent"
+                fxLayout="column" fxLayoutAlign="center center"
+                fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0"
+                    fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    list
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Audit Logs
+                </span>
+                <button type="button" mat-icon-button (click)="reload()">
+                    <mat-icon [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">refresh</mat-icon>
+                </button>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <form [formGroup]="searchForm" (ngSubmit)="onSubmitSearchForm()" fxFlex fxLayout="row" fxLayoutAlign="start center" class="search">
+                    <mat-select formControlName="by" placeholder="Search By">
+                        <mat-option value="username">ID</mat-option>
+                        <mat-option value="nickname">Username</mat-option>
+                        <mat-option value="context">Context</mat-option>
+                    </mat-select>
+
+                    <input type="text" formControlName="keyword" placeholder="Keyword">
+
+                    <button type="reset" mat-icon-button><mat-icon>close</mat-icon></button>
+                    <button type="submit" mat-icon-button><mat-icon>search</mat-icon></button>
+                </form>
+            </div>
+            <!-- / SEARCH -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-progress-bar mode="indeterminate" class="page-loading-indicator" [class.loaded]="!loading"></mat-progress-bar>
+
+            <mat-paginator #paginator
+                           [length]="count"
+                           [pageIndex]="page-1"
+                           [pageSize]="limit"
+                           [hidePageSize]="true"
+                           [showFirstLastButtons]="true"
+                           (page)="onPaginatorPage($event)"></mat-paginator>
+
+            <mat-table class="app-table"
+                       #table [dataSource]="auditLogs"
+                       [@animateStagger]="{value:'50'}"
+                       fusePerfectScrollbar>
+
+                <ng-container matColumnDef="request.ip">
+                    <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
+                    <mat-cell *matCellDef="let log">
+                        <p class="text-truncate">{{ log.request.ip }}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="user">
+                    <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
+                    <mat-cell *matCellDef="let log">
+                        <p *ngIf="log.nickname || log.username" class="text-truncate">
+                            <b *ngIf="log.username">{{ log.username }}</b> <span *ngIf="log.nickname">({{ log.nickname }})</span>
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="context">
+                    <mat-header-cell *matHeaderCellDef>Context</mat-header-cell>
+                    <mat-cell *matCellDef="let log">
+                        <mat-chip-list *ngIf="log.error"><mat-chip color="warn" selected>Error</mat-chip></mat-chip-list>
+                        {{ log.context }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                    <mat-header-cell *matHeaderCellDef>Created At</mat-header-cell>
+                    <mat-cell *matCellDef="let log">
+                        <p class="text-truncate"><time>{{ log.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</time></p>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="COLUMNS; sticky: true"></mat-header-row>
+
+                <mat-row *matRowDef="let log; columns: COLUMNS;"
+                         class="table-item"
+                         matRipple
+                         [@animate]="{value:'*',params:{y:'100%'}}"
+                         (click)="showItem(log)"></mat-row>
+
+            </mat-table>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>
